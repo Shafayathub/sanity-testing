@@ -1,13 +1,23 @@
-// schemas/pet.js
+// schemas/blog.js
 export default {
-  name: 'Blog',
+  name: 'blog',
   type: 'document',
-  title: 'Blog-1',
+  title: 'Blog',
   fields: [
     {
       name: 'title',
       type: 'string',
       title: 'Title',
+    },
+    {
+      title: 'Slug',
+      name: 'slug',
+      type: 'slug',
+      options: {
+        source: 'title',
+        maxLength: 200, // will be ignored if slugify is set
+        slugify: (input) => input.toLowerCase().replace(/\s+/g, '-').slice(0, 200),
+      },
     },
     {
       name: 'content',
@@ -29,11 +39,34 @@ export default {
             alternative text is of great help for those 
             people that can rely on it to have a good idea of 
             what's on your page.`,
-              options: {
-                isHighlighted: true,
-              },
             },
           ],
+        },
+      ],
+    },
+
+    {
+      name: 'metaDes',
+      type: 'string',
+      title: 'Meta Description',
+    },
+    {
+      title: 'Blog Image',
+      name: 'blogImage',
+      type: 'image',
+      options: {
+        hotspot: true, // <-- Defaults to false
+      },
+      fields: [
+        {
+          name: 'caption',
+          type: 'string',
+          title: 'Caption',
+        },
+        {
+          name: 'attribution',
+          type: 'string',
+          title: 'Attribution',
         },
       ],
     },
@@ -41,6 +74,18 @@ export default {
       title: 'Created At',
       name: 'createdAt',
       type: 'datetime',
+    },
+    {
+      name: 'author',
+      type: 'object',
+      fields: [
+        {
+          title: 'Author',
+          name: 'author',
+          type: 'reference',
+          to: [{type: 'author'}],
+        },
+      ],
     },
   ],
 }
